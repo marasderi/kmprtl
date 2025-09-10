@@ -1,0 +1,10 @@
+fastapi
+sqlalchemy
+psycopg2-binary
+pydantic
+passlib[bcrypt]
+python-jose[cryptography]
+fastapi-socketio
+boto3
+elasticsearch
+uvicorn
