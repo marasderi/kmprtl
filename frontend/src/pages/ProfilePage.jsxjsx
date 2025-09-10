@@ -1,0 +1,64 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const ProfilePage = () => {
+    const [user, setUser] = useState(null);
+    const [posts, setPosts] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchUser();
+        fetchPosts();
+    }, []);
+
+    const fetchUser = async () => {
+        const response = await fetch('/api/users/me', {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+        const data = await response.json();
+        setUser(data);
+    };
+
+    const fetchPosts = async () => {
+        const response = await fetch('/api/posts?user_id=1');
+        const data = await response.json();
+        setPosts(data);
+    };
+
+    return (
+        <div className="main-page-content p-4 md:p-8 space-y-6">
+            <h2 className="text-3xl font-bold text-white flex items-center gap-2">
+                <i data-lucide="user" className="text-indigo-400"></i> Profil
+            </h2>
+            {user && (
+                <div className="bg-slate-800/70 p-6 rounded-xl glass-effect">
+                    <div className="flex items-center gap-4">
+                        <img src={user.avatar || '/default-avatar.png'} alt="Avatar" className="w-16 h-16 rounded-full" />
+                        <div>
+                            <p className="text-white font-semibold text-xl">{user.username}</p>
+                            <p className="text-slate-400">{user.bio || 'Biyografi yok'}</p>
+                            <p className="text-slate-400 text-sm">Katılım: {new Date(user.created_at).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => navigate('/edit-profile')}
+                        className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg"
+                    >
+                        <i data-lucide="edit" className="inline mr-2"></i> Profili Düzenle
+                    </button>
+                </div>
+            )}
+            <div className="space-y-4">
+                {posts.map(post => (
+                    <div key={post.id} className="bg-slate-700/50 p-4 rounded-lg">
+                        <p className="text-white">{post.content}</p>
+                        {post.media_url && <img src={post.media_url} alt="Media" className="mt-2 max-w-full rounded-lg" />}
+                        <p className="text-slate-400 text-sm">{new Date(post.created_at).toLocaleDateString()}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default ProfilePage;
