@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: kmprtl_user
+          POSTGRES_PASSWORD: changeme-db-pass
+          POSTGRES_DB: kmprtl_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U kmprtl_user -d kmprtl_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ---- Backend ----
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: Install backend deps
+        run: |
+          cd backend
+          pip install -r requirements.txt
+          pip install pytest black isort
+
+      - name: Lint backend
+        run: black --check . && isort --check-only .
+
+      - name: Test backend
+        run: pytest
+
+      # ---- Frontend ----
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install frontend deps
+        run: |
+          cd frontend
+          npm install
+          npm run lint
+          npm run build
+          npm test
