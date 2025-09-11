@@ -1,50 +1,22 @@
- 
+# Kamu Portal (kmprtl)
 
-Kurulum
+🚀 KamuPortal: Kamuya açık verilerin, toplulukların ve içeriklerin paylaşılabildiği bir platform.  
+Backend (Django REST), Frontend (Next.js), Elasticsearch ve RabbitMQ üzerine kurulu.
 
-Bağımlılıklar:
+---
 
-Node.js 
-Python 3.10  
-Docker  
+## 📦 Mimarisi
+- **Frontend:** Next.js (React)
+- **Backend:** Django REST Framework
+- **Veritabanı:** PostgreSQL
+- **Queue:** RabbitMQ
+- **Arama:** Elasticsearch
+- **Container Orkestrasyonu:** Docker Compose
 
+---
 
-Frontend:
-cd frontend
-npm install
-npm run dev
+## 🔧 Kurulum
 
-
-Backend:
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
-
-
-Docker:
-docker-compose up -d
-
-
-AWS S3:
-
-AWS hesabında bucket oluştur  
-AWS_ACCESS_KEY_ID ve AWS_SECRET_ACCESS_KEY environment değişkenlerini ayarla.
-
-
-
-Çalıştırma
-
-Frontend: http://localhost:5173
-Backend: http://localhost:8000
-Elasticsearch: http://localhost:9200
-RabbitMQ: http://localhost:15672
-
-Ölçeklendirme
-
-AWS ECS/EKS ile backend ölçeklendirme
-AWS RDS PostgreSQL (read replicas, Citus sharding)
-Redis ElastiCache (caching)
-AWS ALB (yük dengeleme)
-
-Lisans
-MIT
+1. `.env.example` dosyasını `.env` olarak kopyalayın ve içini doldurun:
+   ```bash
+   cp .env.example .env
